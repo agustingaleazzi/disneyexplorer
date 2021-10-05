@@ -30,8 +30,10 @@ public class UsuarioService implements UserDetailsService{
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
+	/*
 	@Autowired
 	private NotificacionService notificacionService;
+	*/
 	
 
 	//register user
@@ -114,17 +116,12 @@ public class UsuarioService implements UserDetailsService{
 		if(usuario != null) {
 			List<GrantedAuthority> permisos = new ArrayList<>();
 			
-			GrantedAuthority p1 = new SimpleGrantedAuthority("MODULO_GENERO");
-			permisos.add(p1);
-			GrantedAuthority p2 = new SimpleGrantedAuthority("MODULO_IMAGEN");
-			permisos.add(p2);
-			GrantedAuthority p3 = new SimpleGrantedAuthority("MODULO_PELICULAOSERIE");
-			permisos.add(p3);
-			GrantedAuthority p4 = new SimpleGrantedAuthority("MODULO_PERSONAJE");
-			permisos.add(p4);
+			GrantedAuthority permiso1 = new SimpleGrantedAuthority("ROLE_REGISTERED_USER");
+			permisos.add(permiso1);
+			
 			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 			HttpSession session = attr.getRequest().getSession(true);
-			session.setAttribute("usuario", usuario);
+			session.setAttribute("usuariosession", usuario);
 						
 			User user = new User(usuario.getMail(), usuario.getClave(), permisos);
 			

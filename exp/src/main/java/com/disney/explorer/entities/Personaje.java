@@ -18,6 +18,7 @@ public class Personaje {
 	@GenericGenerator(name="uuid", strategy="uuid2")
 	private String id;
 	private String nombre;
+	private Integer edad;
 	private Integer peso;
 	private String historia;
 	
@@ -55,6 +56,14 @@ public class Personaje {
 		this.nombre = nombre;
 	}
 
+	public Integer getEdad() {
+		return edad;
+	}
+
+	public void setEdad(Integer edad) {
+		this.edad = edad;
+	}
+	
 	public Integer getPeso() {
 		return peso;
 	}

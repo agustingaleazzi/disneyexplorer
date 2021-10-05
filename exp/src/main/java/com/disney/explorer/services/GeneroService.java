@@ -11,17 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.disney.explorer.entities.Genero;
 import com.disney.explorer.entities.Imagen;
 import com.disney.explorer.entities.PeliculaOSerie;
-import com.disney.explorer.entities.Usuario;
 import com.disney.explorer.errors.ErrorService;
 import com.disney.explorer.repositories.GeneroRepository;
-import com.disney.explorer.repositories.UsuarioRepository;
 
 public class GeneroService {
 	
 	@Autowired
 	private GeneroRepository generoRepository;
-	@Autowired
-	private UsuarioRepository usuarioRepository;
 
 	@Autowired
 	private ImagenService imagenService;
@@ -29,7 +25,6 @@ public class GeneroService {
 	@Transactional
 	public void agregarGenero(String idUsuario, String nombre, MultipartFile imagen, List<PeliculaOSerie> peliculasOSeries) throws ErrorService {
 		validar(nombre);
-		validarUsuario(idUsuario);
 			
 		Genero genero = new Genero();
 		genero.setNombre(nombre);
@@ -47,7 +42,6 @@ public class GeneroService {
 	@Transactional
 	public void modificarGenero(String idUsuario, String idGenero, String nombre, MultipartFile imagen, List<PeliculaOSerie> peliculasOSeries) throws ErrorService{
 		validar(nombre);
-		validarUsuario(idUsuario);
 		
 		Optional<Genero> respuesta = generoRepository.findById(idGenero);	
 		if(respuesta.isPresent()) {
@@ -70,7 +64,6 @@ public class GeneroService {
 		
 	@Transactional
 	public void eliminarGenero(String idUsuario, String idGenero) throws ErrorService{
-		validarUsuario(idUsuario);
 		Optional<Genero> respuesta = generoRepository.findById(idGenero);	
 		if(respuesta.isPresent()) {
 			Genero genero = respuesta.get();
@@ -87,10 +80,4 @@ public class GeneroService {
 		}
 	}
 		
-	public void validarUsuario(String idUsuario) throws ErrorService{
-		Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);	
-		if(!respuesta.isPresent()) {
-			throw new ErrorService("Necesitas utilizar un usuario registrado para añadir, modificar o eliminar géneros.");
-		}		
-	}
 }

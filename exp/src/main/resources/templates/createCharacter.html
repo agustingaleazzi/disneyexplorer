@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+
+<body>
+    <div class="panel">
+    <!--<p th:if="${error != null}" th:text="${error}"></p>-->
+    <div class="userName">
+    <h3>Usuario</h3>
+    <h2 th:if="${session.usuariosession} != null" th:text="${session.usuariosession.nombre}"></h2>
+    </div>
+    <form th:action="@{/charactersPanel/agregarPersonaje}" method="POST" enctype="multipart/form-data">
+        <h4>Ingresando personaje</h4>
+        <label>Nombre</label>
+        <input type="text" name="nombre"></input>
+        </br>        
+        <label>Edad</label>
+        <input type="number" name="edad"></input>
+        </br>
+        <label>Peso</label>
+        <input type="number" name="peso"></input>
+        </br>
+        <label>Historia</label>
+        <input type="text" name="historia"></input>
+        </br>
+        <label>Imagen</label>
+        <input type="file" name="imagen"></input>
+        </br>  
+        <button type="submit">Agregar personaje</button>
+        
+    </form>
+
+
+</div>
+
+</body>
+
+</html>
