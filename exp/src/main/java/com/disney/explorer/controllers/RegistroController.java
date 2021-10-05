@@ -1,9 +1,7 @@
 package com.disney.explorer.controllers;
 
-import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,7 +34,7 @@ public class RegistroController {
 
 				return "registro";
 			}
-		modelo.put("mensaje", "Sesión iniciada");
+		modelo.put("mensaje", "Usuario creado satisfactoriamente.");
 		return "exito";
 	}
 	

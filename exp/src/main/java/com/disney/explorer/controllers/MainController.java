@@ -14,4 +14,9 @@ public class MainController {
 		return "index";
 	}
 	
+	
+	@GetMapping("/inicio")
+	public String inicio() {
+		return "inicio.html";
+	}
 }

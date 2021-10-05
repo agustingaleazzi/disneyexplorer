@@ -9,17 +9,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.disney.explorer.services.UsuarioService;
 
 @SpringBootApplication
-public class ExplorerApplication {
-	
-	@Autowired
-	private UsuarioService usuarioServicio;
+public class ExplorerApplication {	
 
 	public static void main(String[] args) {
 		SpringApplication.run(ExplorerApplication.class, args);
 	}
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-		auth.userDetailsService(usuarioServicio).passwordEncoder(new BCryptPasswordEncoder());
-	}
 }

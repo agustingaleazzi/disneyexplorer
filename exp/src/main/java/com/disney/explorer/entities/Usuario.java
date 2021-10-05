@@ -14,10 +14,9 @@ public class Usuario {
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
 	private String id;
 	private String nombre;
-	private String eMail;
+	private String mail;
 	private String dni;
 	
-	//encriptar
 	private String clave;
 	
 	
@@ -43,12 +42,12 @@ public class Usuario {
 		this.id = id;
 	}
 
-	public String geteMail() {
-		return eMail;
+	public String getMail() {
+		return mail;
 	}
 
-	public void seteMail(String email) {
-		eMail = email;
+	public void setMail(String mail) {
+		this.mail = mail;
 	}
 
 	public String getNombre() {

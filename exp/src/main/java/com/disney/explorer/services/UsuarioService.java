@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.disney.explorer.entities.Usuario;
 import com.disney.explorer.errors.ErrorService;
@@ -33,13 +37,13 @@ public class UsuarioService implements UserDetailsService{
 	//register user
 
 	@Transactional
-	public void registrarUsuario(String nombre, String eMail, String clave, String dni) throws ErrorService {
+	public void registrarUsuario(String nombre, String mail, String clave, String dni) throws ErrorService {
 		
-		validar(nombre, eMail, clave);
+		validar(nombre, mail, clave);
 		
 		Usuario usuario = new Usuario();
 		usuario.setNombre(nombre);
-		usuario.seteMail(eMail);
+		usuario.setMail(mail);
 		
 		//encrypting user password
 		String encript = new BCryptPasswordEncoder().encode(clave);		
@@ -55,15 +59,15 @@ public class UsuarioService implements UserDetailsService{
 
 	//modify user
 	@Transactional
-	public void modificarUsuario(String id, String nombre, String eMail, String clave) throws ErrorService {	
+	public void modificarUsuario(String id, String nombre, String mail, String clave) throws ErrorService {	
 
-		validar(nombre, eMail, clave);
+		validar(nombre, mail, clave);
 		
 		Optional<Usuario> respuesta = usuarioRepository.findById(id);	
 		if(respuesta.isPresent()) {
 			Usuario usuario = respuesta.get();
 			usuario.setNombre(nombre);
-			usuario.seteMail(eMail);
+			usuario.setMail(mail);
 			usuario.setClave(clave);
 			
 			usuarioRepository.save(usuario);
@@ -89,13 +93,13 @@ public class UsuarioService implements UserDetailsService{
 	}
 	
 	//validating input data
-	private void validar(String nombre, String eMail, String clave) throws ErrorService{
+	private void validar(String nombre, String mail, String clave) throws ErrorService{
 		if(nombre==null || nombre.isEmpty()) {
 			throw new ErrorService("Error en el nombre: esta vacio");
 		}
 		
-		if(eMail==null || eMail.isEmpty()) {
-			throw new ErrorService("Error en el eMail: esta vacio");
+		if(mail==null || mail.isEmpty()) {
+			throw new ErrorService("Error en el mail: esta vacio");
 		}
 		
 		if(clave.isEmpty() || clave.length()<6) {
@@ -107,7 +111,7 @@ public class UsuarioService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
 		Usuario usuario = usuarioRepository.buscarPorMail(mail);
-		if(usuario !=null) {
+		if(usuario != null) {
 			List<GrantedAuthority> permisos = new ArrayList<>();
 			
 			GrantedAuthority p1 = new SimpleGrantedAuthority("MODULO_GENERO");
@@ -118,13 +122,15 @@ public class UsuarioService implements UserDetailsService{
 			permisos.add(p3);
 			GrantedAuthority p4 = new SimpleGrantedAuthority("MODULO_PERSONAJE");
 			permisos.add(p4);
+			ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			HttpSession session = attr.getRequest().getSession(true);
+			session.setAttribute("usuario", usuario);
+						
+			User user = new User(usuario.getMail(), usuario.getClave(), permisos);
 			
-			
-			User user = new User(mail, usuario.getClave(), permisos);
-			
-			return user;
+			return user;			
 		} else {
-			return null;
+			throw new UsernameNotFoundException("Usuario no encontrado");
 		}
 		
 	}

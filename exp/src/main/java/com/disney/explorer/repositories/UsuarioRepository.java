@@ -10,7 +10,7 @@ import com.disney.explorer.entities.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
 
-	@Query("select e from Usuario e where e.eMail like :eMail")
-	public Usuario buscarPorMail(@Param("eMail") String eMail);
+	@Query("SELECT a from Usuario a WHERE a.mail LIKE :mail")
+	public Usuario buscarPorMail(@Param("mail") String mail);
 	
 }

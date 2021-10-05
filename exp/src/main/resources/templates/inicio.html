@@ -7,17 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <form th:action="@{/logincheck}" method="POST">
-    
-    	<p th:if="${error != null}" th:text="${error}"></p>
-    
-        <label>Email</label>
-        <input type="email" name="mail">
-        </br>
-        <label>Contraseña</label>
-        <input type="password" name="clave">
-        </br>
-
-        <button type="submit">Ingresar</button>
+    <h1>Usuario logueado <3</h1>
+    </br>
+    <a href="/dashboard">Acceder al dashboard</a>
 </body>
 </html>

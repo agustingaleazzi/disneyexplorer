@@ -1,4 +1,4 @@
-package com.disney.explorer.config;
+package com.disney.explorer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,14 +32,13 @@ public class SegConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/css/*", "/js/*", "/img/*", "/**").permitAll()
+				.antMatchers("/css/*", "/js/*", "/img/*").permitAll()
 				.and().formLogin()
-					.loginPage("/login")
+					.loginPage("/auth/login")
 						.loginProcessingUrl("/logincheck")
-						.usernameParameter("email")
+						.usernameParameter("mail")
 						.passwordParameter("clave")
-						.defaultSuccessUrl("/loginsuccess")
-						.failureUrl("/login?error=error")
+						.defaultSuccessUrl("/inicio")
 						.permitAll()
 				.and().logout()
 					.logoutUrl("/logout")
