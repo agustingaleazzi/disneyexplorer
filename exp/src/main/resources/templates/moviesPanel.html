@@ -17,21 +17,22 @@
     </div>
     <div>
         <h4>Opciones</h4>
-        <a href="/charactersPanel/createCharacter">Crear personaje</a>
+        <a href="/moviesPanel/createMovie">Crear pelicula</a>
         
-        <a href="/charactersPanel/editCharacter">Editar personaje</a>
+        <a href="/moviesPanel/editMovie">Editar pelicula</a>
 
-        <a href="/charactersPanel/deleteCharacter">Eliminar personaje</a>
+        <a href="/moviesPanel/deleteMovie">Eliminar personaje</a>
         
     </div>
     <div>
         <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Imagen</th>
-            </tr>
+				<tr>
+					<th>Nombre</th>
+					<th>Imagen</th>
+				</tr>
         </thead>
-            <tr th:each="Personaje : ${listaPersonajes}">
+            <tr>
+    	        <th th:each="Personaje : ${listaPersonajes}">
                 <td th:text="${Personaje.nombre}"></td>
                 <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;"></td>
             </tr>

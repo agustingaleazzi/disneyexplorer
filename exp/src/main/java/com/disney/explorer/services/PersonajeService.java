@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.disney.explorer.entities.Imagen;
+import com.disney.explorer.entities.PeliculaOSerie;
 import com.disney.explorer.entities.Personaje;
 import com.disney.explorer.errors.ErrorService;
 import com.disney.explorer.repositories.PersonajeRepository;
@@ -22,10 +23,12 @@ public class PersonajeService {
 	
 	@Autowired
 	private ImagenService imagenService;
+	@Autowired
+	private PeliculaOSerieService peliculaOSerieService;
 	
 	//add character
 	@Transactional
-	public void agregarPersonaje(String idUsuario, String nombre, Integer peso, String historia, MultipartFile imagen) throws ErrorService{
+	public void agregarPersonaje(String nombre, Integer peso, String historia, MultipartFile imagen, String pelicula) throws ErrorService{
 		validar(nombre);
 		
 		Personaje personaje = new Personaje();
@@ -36,13 +39,15 @@ public class PersonajeService {
 		Imagen img = imagenService.guardar(imagen);
 		personaje.setImagen(img);
 		
+		List<PeliculaOSerie> peliculaOSerie = peliculaOSerieService.verificarSiExisteOCrear(pelicula);		
+		personaje.setPeliculasOSeries(peliculaOSerie);
 		
 		personajeRepository.save(personaje);		
 	}
 	
 	//search character by name
 	@Transactional
-	public List<Personaje> buscarPersonajePorNombre(String nombre) {
+	public Personaje buscarPersonajePorNombre(String nombre) {
 		return personajeRepository.buscarPorNombre(nombre);
 	}
 	
@@ -54,7 +59,7 @@ public class PersonajeService {
 	
 	//modify character
 	@Transactional
-	public void modificarPersonaje(String idUsuario, String idPersonaje, String nombre, Integer peso, String historia, MultipartFile imagen) throws ErrorService{
+	public void modificarPersonaje(String idPersonaje, String nombre, Integer peso, String historia, MultipartFile imagen, String pelicula) throws ErrorService{
 		validar(nombre);
 		
 		Optional<Personaje> respuesta = personajeRepository.findById(idPersonaje);	
@@ -71,6 +76,10 @@ public class PersonajeService {
 			Imagen img = imagenService.actualizar(idImagen, imagen);
 			personaje.setImagen(img);
 			
+			List<PeliculaOSerie> peliculasOSeries = peliculaOSerieService.verificarSiExisteOCrear(pelicula);
+			peliculasOSeries.addAll(personaje.getPeliculasOSeries());
+			personaje.setPeliculasOSeries(peliculasOSeries);
+			
 			personajeRepository.save(personaje);	
 		} else {
 			throw new ErrorService("El personaje a modificar no ha sido encontrado.");
@@ -78,7 +87,8 @@ public class PersonajeService {
 	}
 	
 	//delete character
-	public void eliminarPersonaje(String idUsuario, String idPersonaje) throws ErrorService{
+	@Transactional
+	public void eliminarPersonaje(String idPersonaje) throws ErrorService{
 		
 		Optional<Personaje> respuesta = personajeRepository.findById(idPersonaje);	
 		if(respuesta.isPresent()) {

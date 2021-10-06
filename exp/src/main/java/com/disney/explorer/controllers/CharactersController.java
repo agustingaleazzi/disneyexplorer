@@ -40,16 +40,62 @@ public class CharactersController {
 		return new ModelAndView("createCharacter.html");
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/editCharacter")
+	public ModelAndView editCharacter(@RequestParam(required=false) String error, @RequestParam(required=false) String nombre, ModelMap model) {
+		Personaje listaPersonajes = personajeService.buscarPersonajePorNombre(nombre);
+		model.addAttribute("listaPersonajes", listaPersonajes);
+		return new ModelAndView("editCharacter.html");
+	}
+	
 
 	@PostMapping("/agregarPersonaje")
-	public RedirectView agregarPersonaje(ModelMap modelo, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia, @RequestParam MultipartFile imagen) {
+	public RedirectView agregarPersonaje(ModelMap modelo, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia, @RequestParam MultipartFile imagen, @RequestParam String pelicula) {
+
 		try {
-			personajeService.agregarPersonaje(historia, nombre, peso, historia, imagen);
+			personajeService.agregarPersonaje(nombre, peso, historia, imagen, pelicula);
 		} catch (ErrorService e) {
 			modelo.put("error", e.getMessage());
 			e.printStackTrace();
 		}
+		
 		modelo.put("mensaje", "Personaje creado satisfactoriamente.");
-			return new RedirectView("/charactersPanel");
+		
+		return new RedirectView("/charactersPanel");
 	}
+	
+	@PostMapping("/editarPersonaje")
+	public RedirectView editarPersonaje(ModelMap modelo, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia, @RequestParam MultipartFile imagen, @RequestParam String pelicula) {
+		
+		try {
+			Personaje respuesta = personajeService.buscarPersonajePorNombre(nombre);
+			
+			personajeService.modificarPersonaje(respuesta.getId(), nombre, peso, historia, imagen, pelicula);
+		} catch (ErrorService e) {
+			modelo.put("error", e.getMessage());
+			e.printStackTrace();
+		}
+		
+		modelo.put("mensaje", "Personaje modificado satisfactoriamente.");
+		
+		return new RedirectView("/charactersPanel");
+	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/buscarPersonaje")
+	public ModelAndView buscarPersonaje(@RequestParam(required=false) String error, @RequestParam(required=false) String nombre, ModelMap model) {
+		if(nombre != null) {
+			Personaje match = personajeService.buscarPersonajePorNombre(nombre);
+			model.addAttribute("match", match);			
+		}
+
+		return new ModelAndView("editCharacter.html");
+	}
+	
+	/*@GetMapping("/buscarPersonaje")
+	public String buscarPersonaje(@RequestParam(required=false) String match, ModelMap model) {	
+	if(match != null) {
+		model.put("match", match);
+	}
+	return ""*/
 }

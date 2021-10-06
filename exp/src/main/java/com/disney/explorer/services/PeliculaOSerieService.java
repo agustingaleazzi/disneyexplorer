@@ -1,5 +1,6 @@
 package com.disney.explorer.services;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class PeliculaOSerieService {
 	
 	//add movieorseries
 	@Transactional
-	public void agregarPeliculaOSerie(String idUsuario, String titulo, Date fecha, Integer clasificacion, MultipartFile imagen, List<Personaje> personajes) throws ErrorService {
+	public void agregarPeliculaOSerie(String titulo, Date fecha, Integer clasificacion, MultipartFile imagen, List<Personaje> personajes) throws ErrorService {
 		validar(titulo, clasificacion);
 		
 		PeliculaOSerie peliculaOSerie = new PeliculaOSerie();
@@ -40,13 +41,29 @@ public class PeliculaOSerieService {
 		peliculaOSerieRepository.save(peliculaOSerie);				
 	}
 	
-	public List<Personaje> buscarPeliculaOSeriePorTitulo(String titulo) {
+	@Transactional
+	public Optional<PeliculaOSerie> buscarPeliculaOSeriePorTitulo(String titulo) {
 		return peliculaOSerieRepository.buscarPorTitulo(titulo);
+	}
+	
+	@Transactional
+	public List<PeliculaOSerie> verificarSiExisteOCrear(String titulo){
+		PeliculaOSerie peliculaOSerie = new PeliculaOSerie();
+		Optional<PeliculaOSerie> respuesta = peliculaOSerieRepository.buscarPorTitulo(titulo);
+		if(respuesta.isPresent()) {			
+			peliculaOSerie = respuesta.get();
+		} else {
+			peliculaOSerie.setTitulo(titulo);
+		}
+			List<PeliculaOSerie> lista =new ArrayList<>();
+			lista.add(peliculaOSerieRepository.save(peliculaOSerie));
+			return lista;
+
 	}
 	
 	//modify movieorseries
 	@Transactional
-	public void modificarPeliculaOSerie(String idUsuario, String idPeliculaOSerie, String titulo, Date fecha, Integer clasificacion, MultipartFile imagen, List<Personaje> personajes) throws ErrorService{
+	public void modificarPeliculaOSerie(String idPeliculaOSerie, String titulo, Date fecha, Integer clasificacion, MultipartFile imagen, List<Personaje> personajes) throws ErrorService{
 		validar(titulo, clasificacion);
 		
 		Optional<PeliculaOSerie> respuesta = peliculaOSerieRepository.findById(idPeliculaOSerie);	
@@ -71,7 +88,7 @@ public class PeliculaOSerieService {
 	
 	//delete movieorseries
 	@Transactional
-	public void eliminarPeliculaOSerie(String idUsuario, String idPelicula) throws ErrorService{
+	public void eliminarPeliculaOSerie(String idPelicula) throws ErrorService{
 		Optional<PeliculaOSerie> respuesta = peliculaOSerieRepository.findById(idPelicula);	
 		if(respuesta.isPresent()) {
 			PeliculaOSerie peliculaOSerie = respuesta.get();
@@ -81,6 +98,11 @@ public class PeliculaOSerieService {
 		}
 	}	
 	
+	//search all characters
+	@Transactional
+	public List<PeliculaOSerie> buscarTodos() {
+		return peliculaOSerieRepository.findAll();
+	}
 		
 	//validating input data
 	public void validar(String titulo, Integer clasificacion) throws ErrorService{
@@ -92,6 +114,6 @@ public class PeliculaOSerieService {
 		}
 	}
 
-
+	
 	
 }

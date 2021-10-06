@@ -15,8 +15,22 @@
     <h3>Usuario</h3>
     <h2 th:if="${session.usuariosession} != null" th:text="${session.usuariosession.nombre}"></h2>
     </div>
+    <form th:action="@{/charactersPanel/buscarPersonaje}" method="GET">
+        <h2>Busca el personaje a editar:</h2>
+        <input type="text" name="nombre"></input>
+        <button type="submit">Submit</button>
+    </form>
+    <p th:if="${match != null}" th:text="${match.nombre}"></p>
+    </br>
+    <p th:if="${match != null}" th:text="${match.peliculasOSeries}"></p>
+    </br>
+    <p th:if="${match != null}" th:text="${match.edad}"></p>
+    </br>
+    <p th:if="${match != null}" th:text="${match.historia}"></p>
+    </br>
+    <img th:if="${match != null}" th:src="@{/Imagen/load/__${match.Imagen.id}__}" style="width: auto; height: 60px;">
     <form th:action="@{/charactersPanel/agregarPersonaje}" method="POST" enctype="multipart/form-data">
-        <h4>Ingresando personaje</h4>
+        <h4>Editando personaje personaje</h4>
         <label>Nombre</label>
         <input type="text" name="nombre"></input>
         </br>        
@@ -32,7 +46,7 @@
         <label>Imagen</label>
         <input type="file" name="imagen"></input>
         </br>
-        <Label>Películas (Una sola por ahora, luego vas a poder agregar mas editando)</label>
+        <Label>Películas</label>
         <input type="text" name="pelicula"></input>
         <button type="submit">Agregar personaje</button>
         
