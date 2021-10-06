@@ -21,3 +21,5 @@ creación de personaje con imagen y con las películas asociadas. le falta compl
 busqueda de personaje, que se muestra en la página (pensado para facilitar la edición)
 
 Estoy muy contento de haber realizado este ejercicio.
+
+//Voy a seguir desarrollandolo en una branch
