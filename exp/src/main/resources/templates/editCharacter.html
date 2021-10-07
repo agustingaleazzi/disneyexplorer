@@ -22,6 +22,9 @@
             color: #FFFFFC;
             text-decoration: none;
         }
+        h3{
+			color: #8D4F92;
+		}
 
         .userbar {
             height: 10vh;
@@ -43,15 +46,28 @@
             justify-content: space-evenly;
             margin-top: 2%;
         }
+        form{
+	           display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 5px;
+}
 
         table {
             width: 62%;
+        }
+        label{
+            padding: 15px;
         }
 
         .row {
             display: flex;
             flex-direction: row;
         }
+        .form-group{
+	margin-bottom: 10px;
+}
     </style>
 </head>
 
@@ -65,7 +81,9 @@
         <div class="container buscador">
             <form th:action="@{/characters/buscarPersonaje}" method="GET">
                 <h2>Busca el personaje a editar:</h2>
+                <div class="form-group col-md-6">
                 <input type="text" name="nombre"></input>
+                </div>
                 <button class="btn btn-primary" type="submit">Buscar</button>
             </form>
         </div>
@@ -93,18 +111,17 @@
                 </body>
             </table>
             <form th:action="@{/characters/addMovieToCharacter}" method="POST">
-                <h4>Añadir película al personaje</h4>
+                <h3>Añadir película al personaje</h3>
                 <div class="form-group col-md-10">
                     <label>Nombre</label>
                         <h4 th:text="${personaje.nombre}"></h4>
                     <input type="hidden" name="idPersonaje" th:if="${personaje != null}" th:value="${personaje.id}"></input>
                 </div>
                 <div class="form-group col-md-10">
-                    <label>Peliculas</label>
-                    <select type="text" name="idPelicula" th:if="${peliculas != null}">
+                    <label>Selecciona de la lista de películas</label>
+                    <select type="text"  class="form-control" name="idPelicula" th:if="${peliculas != null}">
                     	<option th:each="pelicula :${peliculas}" th:text="${pelicula.titulo}" th:value="${pelicula.id}"></option>
                     </select>
-
                 </div>
 
                 <button class="btn btn-primary" type="submit">Añadir película al personaje</button>
@@ -115,27 +132,27 @@
         	<p th:if="${mensaje != null}" th:text="${mensaje}"></p>
 
             <form th:action="@{/characters/editCharacter}" method="POST" enctype="multipart/form-data">
-                <h4>Editando personaje</h4>
+                <h3>Editando personaje</h3>
 
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Nombre</label>
-                        <input type="text" name="nombre" th:if="${personaje != null}"
+                        <input type="text"  class="form-control"name="nombre" th:if="${personaje != null}"
                             th:placeholder="${personaje.nombre}"></input>
                     </div>
                     <div class="form-group col-md-3">
                         <label>Edad</label>
-                        <input type="number" name="edad" th:if="${personaje != null}"
+                        <input type="number" class="form-control" name="edad" th:if="${personaje != null}"
                             th:placeholder="${personaje.edad}"></input>
                     </div>
                     <div class="form-group col-md-3">
                         <label>Peso</label>
-                        <input type="number" name="peso" th:if="${personaje != null}"
+                        <input type="number" class="form-control" name="peso" th:if="${personaje != null}"
                             th:placeholder="${personaje.peso}"></input>
                     </div>
                 </div>
                 <label>Historia</label>
-                <input type="text" name="historia" th:if="${personaje != null}" th:input="${personaje.historia}">
+                <input type="text"  class="form-control" name="historia" th:if="${personaje != null}" th:input="${personaje.historia}">
                 </br>
                 <label>Imagen</label>
                 <input type="file" class="form-control" name="imagen"></input>
