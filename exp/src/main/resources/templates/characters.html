@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link rel="stylesheet" href="/exp/src/main/resources/static/css.css">
+</head>
+
+<body>
+    <div class="panel">
+
+        <div class="userName">
+            <h3>Usuario</h3>
+            <h2 th:if="${session.usuariosession} != null" th:text="${session.usuariosession.nombre}"></h2>
+        </div>
+        <div class="container-fluid">
+            <h4>Opciones</h4>
+            <button type="button" class="btn btn-dark"><a href="/characters/createCharacter">Crear
+                    personaje</a></button>
+
+
+            <a href="/characters/editCharacter">Editar personaje</a>
+
+            <a href="/characters/deleteCharacter">Eliminar personaje</a>
+
+            <p th:if="${mensaje != null}" th:text="${mensaje}"></p>
+        </div>
+        <div>
+            <table class="table table-dark table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+
+                <body>
+                    <tr th:each="Personaje : ${listaPersonajes}">
+                        <td th:text="${Personaje.nombre}"></td>
+                        <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;">
+                        </td>
+                    </tr>
+                </body>
+                <table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

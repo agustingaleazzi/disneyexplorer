@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link rel="stylesheet" href="exp/src/main/resources/static/styles.css">  
 </head>
 
 <body>
@@ -15,40 +18,56 @@
     <h3>Usuario</h3>
     <h2 th:if="${session.usuariosession} != null" th:text="${session.usuariosession.nombre}"></h2>
     </div>
-    <form th:action="@{/charactersPanel/buscarPersonaje}" method="GET">
+    <form th:action="@{/characters/buscarPersonaje}" method="GET">
         <h2>Busca el personaje a editar:</h2>
         <input type="text" name="nombre"></input>
         <button type="submit">Submit</button>
     </form>
-    <p th:if="${match != null}" th:text="${match.nombre}"></p>
-    </br>
-    <p th:if="${match != null}" th:text="${match.peliculasOSeries}"></p>
-    </br>
-    <p th:if="${match != null}" th:text="${match.edad}"></p>
-    </br>
-    <p th:if="${match != null}" th:text="${match.historia}"></p>
-    </br>
-    <img th:if="${match != null}" th:src="@{/Imagen/load/__${match.Imagen.id}__}" style="width: auto; height: 60px;">
-    <form th:action="@{/charactersPanel/agregarPersonaje}" method="POST" enctype="multipart/form-data">
+
+		<table class="table table-dark table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Peliculas o series</th>
+                        <th>Edad</th>
+                        <th>Historia</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+
+                <body>
+                    <tr th:if="${personaje != null}">
+                        <td th:text="${personaje.nombre}"></td>
+                        <td th:text="${personaje.peliculasOSeries}"></td>
+                        <td th:text="${personaje.edad}"></td>
+                        <td th:text="${personaje.historia}"></td>                                                                                                                        
+                        <td><img th:src="@{/Imagen/load/__${personaje.Imagen.id}__}" style="width: auto; height: 60px;">
+                        <td>Editar</td>  
+                        </td>
+                    </tr>
+                </body>
+                <table>
+    
+    <form th:action="@{/characters/1!!!!!!!!!!!!1Personaje}" method="POST" enctype="multipart/form-data">
         <h4>Editando personaje personaje</h4>
         <label>Nombre</label>
-        <input type="text" name="nombre"></input>
+        <input type="text" name="nombre" th:if="${personaje != null}" th:placeholder="${personaje.nombre}"></input>
         </br>        
         <label>Edad</label>
-        <input type="number" name="edad"></input>
+        <input type="number" name="edad" th:if="${personaje != null}" th:placeholder="${personaje.edad}"></input>
         </br>
         <label>Peso</label>
-        <input type="number" name="peso"></input>
+        <input type="number" name="peso" th:if="${personaje != null}" th:placeholder="${personaje.peso}"></input>
         </br>
         <label>Historia</label>
-        <input type="text" name="historia"></input>
+        <input type="text" name="historia" th:if="${personaje != null}" th:placeholder="${personaje.historia}"></input>
         </br>
         <label>Imagen</label>
-        <input type="file" name="imagen"></input>
+        <input type="file" name="imagen" th:if="${personaje != null}" th:placeholder="${personaje.imagen}"></input>
         </br>
         <Label>Películas</label>
-        <input type="text" name="pelicula"></input>
-        <button type="submit">Agregar personaje</button>
+        <input type="text" name="pelicula" th:if="${personaje != null}" th:placeholder="${personaje.peliculasOSeries}"></input>
+        <button type="submit">Editar personaje</button>
         
     </form>
 
