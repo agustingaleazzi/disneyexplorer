@@ -57,6 +57,32 @@ public class PersonajeService {
 		return personajeRepository.findAll();
 	}
 	
+	@Transactional
+	public Optional<Personaje> buscarPorId(String id) {
+		return personajeRepository.findById(id);
+	}
+	
+	//addMovieToCharacter
+	@Transactional
+	public void addMovieToCharacter(String characterID, String movieID) throws ErrorService {
+		Optional<Personaje> matchCharacter = buscarPorId(characterID);
+		Optional<PeliculaOSerie> matchPeliculaOSerie = peliculaOSerieService.buscarPorId(movieID);
+		if(matchCharacter.isPresent() && matchPeliculaOSerie.isPresent()){
+			Personaje personaje = personajeRepository.findById(characterID).get();
+			PeliculaOSerie peliculaOSerie = peliculaOSerieService.buscarPorId(movieID).get();
+			if(personaje.getPeliculasOSeries() != null) {
+				List<PeliculaOSerie> peliculas = personaje.getPeliculasOSeries();
+				peliculas.add(peliculaOSerie);
+				personaje.setPeliculasOSeries(peliculas);
+				personajeRepository.save(personaje);	
+			}
+		} else {
+			throw new ErrorService("No se ha podido añadir la película al personaje.");
+		}
+		
+	}
+
+	
 	//modify character
 	@Transactional
 	public void modificarPersonaje(String idPersonaje, String nombre, Integer peso, String historia, MultipartFile imagen, String pelicula) throws ErrorService{

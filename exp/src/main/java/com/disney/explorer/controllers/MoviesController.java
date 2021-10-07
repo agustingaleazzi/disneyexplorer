@@ -23,7 +23,7 @@ public class MoviesController {
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
 	@GetMapping("")
 	public String movies(@RequestParam(required=false) String error, ModelMap model) {
-		List<PeliculaOSerie> listaPeliculas = peliculaService.buscarTodos();
+		List<PeliculaOSerie> listaPeliculas = peliculaService.findAll();
 		model.addAttribute("listaPeliculas", listaPeliculas);
 		return "movies.html";
 	}

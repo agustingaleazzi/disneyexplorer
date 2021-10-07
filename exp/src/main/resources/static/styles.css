@@ -2,6 +2,11 @@ body{
     background-color: #000000;
     color: #FFFFFC;
 }
+.userBar{
+    display: flex;
+    flex-direction: row;
+    
+}
 table{
     width: 80%;
 }

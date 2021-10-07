@@ -61,6 +61,11 @@ public class PeliculaOSerieService {
 
 	}
 	
+	@Transactional
+	public Optional<PeliculaOSerie> buscarPorId(String id) {
+		return peliculaOSerieRepository.findById(id);
+	}
+	
 	//modify movieorseries
 	@Transactional
 	public void modificarPeliculaOSerie(String idPeliculaOSerie, String titulo, Date fecha, Integer clasificacion, MultipartFile imagen, List<Personaje> personajes) throws ErrorService{
@@ -100,7 +105,7 @@ public class PeliculaOSerieService {
 	
 	//search all characters
 	@Transactional
-	public List<PeliculaOSerie> buscarTodos() {
+	public List<PeliculaOSerie> findAll() {
 		return peliculaOSerieRepository.findAll();
 	}
 		
