@@ -45,7 +45,7 @@
 
         .table {
             margin: auto;
-            width: 80vw;
+            width: 40vw;
         }
     </style>
 </head>
@@ -59,6 +59,9 @@
         <div class="container">
             <button type="button" class="btn btn-primary"><a href="/characters/createCharacter">Crear
                     personaje</a></button>
+                    
+        <button type="button" class="btn btn-primary"><a href="/characters/listCharacter">Ver lista de
+                    personajes</a></button>
 
             <button type="button" class="btn btn-primary"><a href="/characters/editCharacter">Editar
                     personaje</a></button>
@@ -80,7 +83,7 @@
                 <body>
                     <tr th:each="Personaje : ${listaPersonajes}">
                         <td th:text="${Personaje.nombre}"></td>
-                        <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;">
+                        <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; max-height: 160px;">
                         </td>
                     </tr>
                 </body>

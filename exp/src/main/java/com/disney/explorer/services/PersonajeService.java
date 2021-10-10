@@ -28,11 +28,12 @@ public class PersonajeService {
 	
 	//add character
 	@Transactional
-	public void agregarPersonaje(String nombre, Integer peso, String historia, MultipartFile imagen, String pelicula) throws ErrorService{
+	public void agregarPersonaje(String nombre, Integer edad, Integer peso, String historia, MultipartFile imagen, String pelicula) throws ErrorService{
 		validar(nombre);
 		
 		Personaje personaje = new Personaje();
 		personaje.setNombre(nombre);
+		personaje.setEdad(edad);
 		personaje.setPeso(peso);
 		personaje.setHistoria(historia);
 		
@@ -57,6 +58,7 @@ public class PersonajeService {
 		return personajeRepository.findAll();
 	}
 	
+
 	@Transactional
 	public Optional<Personaje> buscarPorId(String id) {
 		return personajeRepository.findById(id);
@@ -85,17 +87,18 @@ public class PersonajeService {
 	
 	//modify character
 	@Transactional
-	public void modificarPersonaje(String idPersonaje, String nombre, Integer peso, String historia, MultipartFile imagen, String pelicula) throws ErrorService{
+	public void modificarPersonaje(String idPersonaje, String nombre, Integer edad, Integer peso, String historia) throws ErrorService{
 		validar(nombre);
 		
 		Optional<Personaje> respuesta = personajeRepository.findById(idPersonaje);	
 		if(respuesta.isPresent()) {
 			Personaje personaje = respuesta.get();
 			personaje.setNombre(nombre);
+			personaje.setEdad(edad);
 			personaje.setPeso(peso);
 			personaje.setHistoria(historia);
 			
-			String idImagen = null;
+			/*String idImagen = null;
 			if(personaje.getImagen() != null) {
 				idImagen = personaje.getImagen().getId();
 			}
@@ -104,7 +107,7 @@ public class PersonajeService {
 			
 			List<PeliculaOSerie> peliculasOSeries = peliculaOSerieService.verificarSiExisteOCrear(pelicula);
 			peliculasOSeries.addAll(personaje.getPeliculasOSeries());
-			personaje.setPeliculasOSeries(peliculasOSeries);
+			personaje.setPeliculasOSeries(peliculasOSeries);*/
 			
 			personajeRepository.save(personaje);	
 		} else {
@@ -130,6 +133,18 @@ public class PersonajeService {
 		if(nombre==null || nombre.isEmpty()) {
 			throw new ErrorService("El nombre del personaje no puede estar vacío.");
 		}
+	}
+
+	public List<Personaje> buscarPersonajePorEdad(Integer edad) throws ErrorService {
+		// TODO Auto-generated method stub
+		if(edad==null || edad < 0) {
+			throw new ErrorService("No hay personajes con esta edad.");
+		}
+		List<Personaje> matches = personajeRepository.buscarPorEdad(edad);
+		if(matches.size() == 0) {
+			throw new ErrorService("No hay personajes con esta edad.");			
+		}
+		return matches;
 	}
 	
 }

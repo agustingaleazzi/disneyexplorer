@@ -33,7 +33,7 @@ public class CharactersController {
 
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
 	@GetMapping("")
-	public String charactersList(@RequestParam(required=false) String error, ModelMap model) {
+	public String simpleListCharacters(@RequestParam(required=false) String error, ModelMap model) {
 		List<Personaje> listaPersonajes = personajeService.buscarTodos();
 		model.addAttribute("listaPersonajes", listaPersonajes);
 		return "characters.html";
@@ -44,6 +44,17 @@ public class CharactersController {
 	public ModelAndView createCharacter(@RequestParam(required=false) String error, ModelMap model) {
 		return new ModelAndView("createCharacter.html");
 	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/listCharacter")
+	public String listCharacter(@RequestParam(required=false) String error, ModelMap model) {
+		List<Personaje> listaPersonajes = personajeService.buscarTodos();
+		model.addAttribute("listaPersonajes", listaPersonajes);
+		return "listCharacter.html";
+	}
+	
+
+	
 	
 	
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
@@ -57,7 +68,7 @@ public class CharactersController {
 			e.printStackTrace();
 		}
 	model.addAttribute("mensaje", "película añadida correctamente");
-	return new RedirectView("/editCharacter");
+	return new RedirectView("/characters/editCharacter");
 }
 	
 	
@@ -66,14 +77,15 @@ public class CharactersController {
 	public ModelAndView editCharacter(@RequestParam(required=false) String error, @RequestParam(required=false) String nombre, ModelMap model) {
 		Personaje listaPersonajes = personajeService.buscarPersonajePorNombre(nombre);
 		model.addAttribute("listaPersonajes", listaPersonajes);
-		return new ModelAndView("/characters/editCharacter.html");
+
+		return new ModelAndView("editCharacter.html");
 	}
 	
 	@PostMapping("/editCharacter")
-	public RedirectView editarPersonaje(ModelMap modelo, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia, @RequestParam MultipartFile imagen, @RequestParam String pelicula, String idPersonaje) {
+	public RedirectView editarPersonaje(ModelMap modelo, @RequestParam String idPersonaje, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia) {
 		
 		try {			
-			personajeService.modificarPersonaje(idPersonaje, nombre, peso, historia, imagen, pelicula);
+			personajeService.modificarPersonaje(idPersonaje, nombre, edad, peso, historia);
 		} catch (ErrorService e) {
 			modelo.put("error", e.getMessage());
 			e.printStackTrace();
@@ -89,7 +101,7 @@ public class CharactersController {
 	public RedirectView agregarPersonaje(ModelMap modelo, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia, @RequestParam MultipartFile imagen, @RequestParam String pelicula) {
 
 		try {
-			personajeService.agregarPersonaje(nombre, peso, historia, imagen, pelicula);
+			personajeService.agregarPersonaje(nombre, edad, peso, historia, imagen, pelicula);
 		} catch (ErrorService e) {
 			modelo.put("error", e.getMessage());
 			e.printStackTrace();
@@ -101,18 +113,19 @@ public class CharactersController {
 	}
 	
 
-	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
-	@GetMapping("/buscarPersonaje")
-	public ModelAndView buscarPersonaje(@RequestParam(required=false) String error, @RequestParam(required=false) String nombre, ModelMap model) {
-		if(nombre != null) {
-			Personaje personaje = personajeService.buscarPersonajePorNombre(nombre);
-			List<PeliculaOSerie> peliculasOSeries = peliculasOSeriesService.findAll();
-			model.addAttribute("personaje", personaje);
-			model.addAttribute("pelispersonaje", personaje.getPeliculasOSeries());
-			model.addAttribute("peliculas", peliculasOSeries);
-		}
 
-		return new ModelAndView("editCharacter.html");
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/buscar")
+	public ModelAndView buscarPersonaje(@RequestParam(required=false) String error,@RequestParam Integer edad, ModelMap model) {
+		if(edad != null) {
+			try {
+				List<Personaje> personajes = personajeService.buscarPersonajePorEdad(edad);
+				model.addAttribute("personajesPorEdad", personajes);
+			} catch (ErrorService e) {
+				e.printStackTrace();
+			}
+		}
+		return new ModelAndView("listCharacter.html");
 	}
 	
 	/*@GetMapping("/buscarPersonaje")
