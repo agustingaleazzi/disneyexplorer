@@ -23,3 +23,13 @@ busqueda de personaje, que se muestra en la página (pensado para facilitar la e
 Estoy muy contento de haber realizado este ejercicio.
 
 //Voy a seguir desarrollandolo en una branch "afterdeadline"
+
+Luego de unos días más de trabajo, ahora la app permite:
+- agregar personaje con una pelicula
+- ver una lista detallada de los personajes
+- agregar peliculas
+- agregar películas a los personajes
+- buscar personaje por nombre
+- buscar personaje por edad
+- editar personaje
+- eliminar personaje
