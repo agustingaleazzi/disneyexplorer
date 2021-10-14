@@ -47,10 +47,17 @@ public class PersonajeService {
 	}
 	
 	//search character by name
-	@Transactional
-	public Personaje buscarPersonajePorNombre(String nombre) {
-		return personajeRepository.buscarPorNombre(nombre);
-	}
+
+		@Transactional
+		public List<Personaje> buscarPersonajePorNombre(String nombre)throws ErrorService {
+			List<Personaje> match = personajeRepository.buscarPorNombre(nombre);
+			if(match != null) {
+				return match;
+			}else {
+				throw new ErrorService("No se ha encontrado personajes con ese nombre.");
+			}
+		}
+		
 	
 	//search all characters
 	@Transactional
@@ -60,8 +67,13 @@ public class PersonajeService {
 	
 
 	@Transactional
-	public Optional<Personaje> buscarPorId(String id) {
-		return personajeRepository.findById(id);
+	public Optional<Personaje> buscarPorId(String id) throws ErrorService {
+		Optional<Personaje> match = personajeRepository.findById(id);
+		if(match.isPresent()) {
+			return personajeRepository.findById(id);
+		} else {
+			throw new ErrorService("No se ha encontrado personaje.");
+		}
 	}
 	
 	//addMovieToCharacter
@@ -117,11 +129,11 @@ public class PersonajeService {
 	
 	//delete character
 	@Transactional
-	public void eliminarPersonaje(String idPersonaje) throws ErrorService{
-		
+	public void eliminarPersonaje(String idPersonaje) throws ErrorService{		
 		Optional<Personaje> respuesta = personajeRepository.findById(idPersonaje);	
 		if(respuesta.isPresent()) {
-			Personaje personaje = respuesta.get();
+			System.out.print("aaaaa");
+			Personaje personaje = personajeRepository.findById(idPersonaje).get();
 			personajeRepository.delete(personaje);
 		} else {
 			throw new ErrorService("El personaje a eliminar no ha sido encontrado.");

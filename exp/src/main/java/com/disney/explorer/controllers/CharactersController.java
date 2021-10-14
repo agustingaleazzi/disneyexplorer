@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,9 +28,9 @@ public class CharactersController {
 	
 	@Autowired
 	private PersonajeService personajeService;
-	
 	@Autowired
 	private PeliculaOSerieService peliculasOSeriesService;
+	
 	
 
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
@@ -53,8 +55,6 @@ public class CharactersController {
 		return "listCharacter.html";
 	}
 	
-
-	
 	
 	
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
@@ -74,11 +74,24 @@ public class CharactersController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
 	@GetMapping("/editCharacter")
-	public ModelAndView editCharacter(@RequestParam(required=false) String error, @RequestParam(required=false) String nombre, ModelMap model) {
-		Personaje listaPersonajes = personajeService.buscarPersonajePorNombre(nombre);
-		model.addAttribute("listaPersonajes", listaPersonajes);
-
+	public ModelAndView editCharacter(@RequestParam(required=false) String error) {
 		return new ModelAndView("editCharacter.html");
+	}
+	
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/editCharacter/{ID}")
+	public ModelAndView editCharacter(@PathVariable String ID, ModelMap model) {
+		try {
+			Personaje personajeAEditar = personajeService.buscarPorId(ID).get();
+			List<PeliculaOSerie> peliculasOSeries = peliculasOSeriesService.findAll();
+
+			model.addAttribute("peliculasOSeries", peliculasOSeries);
+			model.addAttribute("personaje", personajeAEditar);
+		} catch (ErrorService e) {
+			e.printStackTrace();		
+			}
+
+		return new ModelAndView("editCharacterPanel.html");
 	}
 	
 	@PostMapping("/editCharacter")
@@ -99,7 +112,6 @@ public class CharactersController {
 
 	@PostMapping("/agregarPersonaje")
 	public RedirectView agregarPersonaje(ModelMap modelo, @RequestParam String nombre, @RequestParam Integer edad, @RequestParam Integer peso, @RequestParam String historia, @RequestParam MultipartFile imagen, @RequestParam String pelicula) {
-
 		try {
 			personajeService.agregarPersonaje(nombre, edad, peso, historia, imagen, pelicula);
 		} catch (ErrorService e) {
@@ -112,22 +124,74 @@ public class CharactersController {
 		return new RedirectView("/characters");
 	}
 	
+	/*@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/buscar")
+	public ModelAndView buscar(@RequestParam(required=false) String error, @RequestParam("nombre") String nombre, ModelMap model) {
+		if(nombre != null) {
+			try {
+				List<Personaje> personajes = personajeService.buscarPersonajePorNombre(nombre);
 
+				model.addAttribute("personajes", personajes);
+			} catch (ErrorService e) {
+				e.printStackTrace();
+			}
+		}
+		return new ModelAndView("listCharacter.html");
+	}*/
+	
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/buscarParaEditar")
+	public ModelAndView buscarParaEditar(@RequestParam(required=false) String error,@RequestParam String nombre, ModelMap model) {
+		if(nombre != null) {
+			try {
+				List<Personaje> personajes = personajeService.buscarPersonajePorNombre(nombre);
+				model.addAttribute("personajes", personajes);
+			} catch (ErrorService e) {
+				e.printStackTrace();
+			}
+		}
+		return new ModelAndView("editCharacter.html");
+	}
 
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
 	@GetMapping("/buscar")
-	public ModelAndView buscarPersonaje(@RequestParam(required=false) String error,@RequestParam Integer edad, ModelMap model) {
+	public ModelAndView buscarPersonajePorEdad(@RequestParam(required=false) String error, @RequestParam(required = false) Integer edad, @RequestParam(required = false) String nombre, ModelMap model) {
+		if(nombre != null) {
+			try {
+				List<Personaje> personajes = personajeService.buscarPersonajePorNombre(nombre);
+				model.addAttribute("personajesPorNombre", personajes);
+			} catch (ErrorService e) {
+				model.put("mensaje", e.toString());
+				e.printStackTrace();
+			}
+		}
 		if(edad != null) {
 			try {
 				List<Personaje> personajes = personajeService.buscarPersonajePorEdad(edad);
 				model.addAttribute("personajesPorEdad", personajes);
 			} catch (ErrorService e) {
+				model.put("mensaje", e.toString());
 				e.printStackTrace();
 			}
 		}
 		return new ModelAndView("listCharacter.html");
 	}
 	
+	
+	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
+	@GetMapping("/delete/{ID}")
+	public RedirectView deleteCharacter(@PathVariable String ID, ModelMap model) {
+		try {
+			personajeService.eliminarPersonaje(ID);
+
+			model.addAttribute("mensaje", "personaje eliminado correctamente");
+		} catch (ErrorService e) {
+			e.printStackTrace();		
+			}
+			
+			return new RedirectView("/characters");
+
+	}
 	/*@GetMapping("/buscarPersonaje")
 	public String buscarPersonaje(@RequestParam(required=false) String match, ModelMap model) {	
 	if(match != null) {

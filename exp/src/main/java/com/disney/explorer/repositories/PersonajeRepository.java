@@ -12,7 +12,7 @@ import com.disney.explorer.entities.Personaje;
 public interface PersonajeRepository extends JpaRepository<Personaje, String>{
 	
 	@Query("select e from Personaje e where e.nombre like :nombre")
-	public Personaje buscarPorNombre(@Param("nombre") String nombre);
+	public List<Personaje> buscarPorNombre(@Param("nombre") String nombre);
 
 	@Query("select e from Personaje e where e.edad like :edad")
 	public List<Personaje> buscarPorEdad(@Param("edad") Integer edad);
