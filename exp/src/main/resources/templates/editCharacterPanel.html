@@ -44,7 +44,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            justify-content: space-evenly;
+            justify-content: center;
             margin-top: 2%;
         }
 
@@ -53,12 +53,10 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 5px;
-        }
-
-        table {
+            padding: 20px;
             width: 62%;
         }
+
 
         label {
             padding: 15px;
@@ -82,47 +80,8 @@
             <h3>Usuario</h3>
             <h2 th:if="${session.usuariosession} != null" th:text="${session.usuariosession.nombre}"></h2>
         </div>
-        <div class="container buscador">
-            <form th:action="@{/characters/buscarParaEditar}" method="GET">
-                <h2>Busca el personaje a editar:</h2>
-                <div class="form-group col-md-6">
-                    <input type="text" name="nombre"></input>
-                </div>
-                <button class="btn btn-primary" type="submit">Buscar</button>
-            </form>
-        </div>
-        <div class="container" th:if="${personajes != null}">
-            <table class="table table-dark table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Peliculas o series</th>
-                        <th>Edad</th>
-                        <th>Peso</th>
-                        <th>Historia</th>
-                        <th>Imagen</th>
-                    </tr>
-                </thead>
-
-                <body>
-                    <tr th:each="Personaje : ${personajes}">
-                        <td th:text="${Personaje.nombre}"></td>
-                        <td>
-                            <p th:each="peli :${Personaje.peliculasOSeries}" th:text="${peli.titulo}"></p>
-                        </td>
-                        <td th:text="${Personaje.edad}"></td>
-                        <td th:text="${Personaje.peso}"></td>
-                        <td th:text="${Personaje.historia}"></td>
-                        <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;">
-                        </td>
-                        <td th:text="${Personaje.historia}"></td>
-                        <td><button type="button" class="btn btn-primary"><a th:href="@{/characters/editCharacter/__${Personaje.id}__}">Editar personaje</a></button></td>
-                        <td><button type="button" class="btn btn-danger"><a th:href="@{/characters/delete/__${Personaje.id}__}">Borrar personaje</a></button></td>
-                    </tr>
-                </body>
-            </table>
             
-            <div th:if="${personajeAEditar != null}">
+            <div th:if="${personaje != null}">
             <form th:action="@{/characters/addMovieToCharacter}" method="POST">
                 <h3>Añadir película al personaje</h3>
                 <div class="form-group col-md-10">
@@ -133,8 +92,8 @@
                 </div>
                 <div class="form-group col-md-10">
                     <label>Selecciona de la lista de películas</label>
-                    <select type="text" class="form-control" name="idPelicula" th:if="${peliculas != null}">
-                        <option th:each="pelicula :${peliculas}" th:text="${pelicula.titulo}" th:value="${pelicula.id}">
+                    <select type="text" class="form-control" name="idPelicula" th:if="${peliculasOSeries != null}">
+                        <option th:each="pelicula :${peliculasOSeries}" th:text="${pelicula.titulo}" th:value="${pelicula.id}">
                         </option>
                     </select>
                 </div>

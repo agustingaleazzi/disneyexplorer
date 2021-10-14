@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar personaje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #000000;
+            color: #FFFFFC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        a {
+            color: #FFFFFC;
+            text-decoration: none;
+        }
+
+        h2 {
+            color: #8D4F92;
+        }
+
+        .userbar {
+            height: 10vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            border-bottom: 3px solid #5F5AA2;
+        }
+
+        .container {
+            border: 3px solid blue;
+            border-radius: 5px;
+            width: 62%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            justify-content: space-evenly;
+            margin-top: 2%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 5px;
+        }
+
+        table {
+            width: 62%;
+        }
+
+        label {
+            padding: 15px;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="panel">
+        <!--<p th:if="${error != null}" th:text="${error}"></p>-->
+        <div class="userbar">
+            <h3>Usuario</h3>
+            <h2 th:if="${session.usuariosession} != null" th:text="${session.usuariosession.nombre}"></h2>
+        </div>
+        <div class="container">
+            <div class="container buscador">
+                <form th:action="@{/characters/buscar}" method="GET">
+                    <h2>Busca personajes y sus detalles por nombre:</h2>
+                    <div class="form-group col-md-6">
+                        <input type="text" name="nombre"></input>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </form>
+            </div>
+            <div class="container buscador">
+                <form th:action="@{/characters/buscar}" method="GET">
+                    <h2>Busca el personaje por pelicula:</h2>
+                    <div class="form-group col-md-6">
+                    <input type="text" name="idPelicula"></input>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </form>
+            </div>
+                    <div class="container buscador">
+                <form th:action="@{/characters/buscar}" method="GET">
+                    <h2>Busca el personajes por edad:</h2>
+                    <div class="form-group col-md-6">
+                    <input type="number" name="edad"></input>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Buscar</button>
+                </form>
+            </div>
+            <h2 th:if="${mensaje != null}" th:text="${mensaje}"></h2>
+            <h2 th:if="${personajesPorNombre == null && personajesPorEdad == null}">Lista detallada de personajes</h2>
+            <table class="table table-dark table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Peliculas o series</th>
+                        <th>Edad</th>
+                        <th>Peso</th>
+                        <th>Historia</th>
+                        <th>Imagen</th>
+                    </tr>
+                </thead>
+
+                <body>
+                    <tr th:each="Personaje : ${listaPersonajes}">
+                        <td th:text="${Personaje.nombre}"></td>
+                        <td>
+                            <p th:each="peli :${Personaje.peliculasOSeries}" th:text="${peli.titulo}"></p>
+                        </td>
+                        <td th:text="${Personaje.edad}"></td>
+                        <td th:text="${Personaje.peso}"></td>
+                        <td th:text="${Personaje.historia}"></td>
+                        <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;">
+                        </td>
+                    </tr>
+                </body>
+            </table>
+    
+            <div th:if="${personajesPorNombre != null}">
+            <h3>Personajes encontrados</h3>
+            <table class="table table-dark table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Peliculas o series</th>
+                            <th>Edad</th>
+                            <th>Peso</th>
+                            <th>Historia</th>
+                            <th>Imagen</th>
+                        </tr>
+                    </thead>
+                    
+                    <body>
+                        <tr th:each="Personaje : ${personajesPorNombre}">
+                            <td th:text="${Personaje.nombre}"></td>
+                            <td ><p th:each="peli :${Personaje.peliculasOSeries}" th:text="${peli.titulo}"></p></td>
+                            <td th:text="${Personaje.edad}"></td>
+                            <td th:text="${Personaje.peso}"></td>
+                            <td th:text="${Personaje.historia}"></td>
+                            <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;">
+                            </td>
+                        </tr>
+                    </body>
+                </table> 
+            </div>
+            <div th:if="${personajesPorEdad != null}">
+            <h3>Personajes encontrados</h3>
+            <table class="table table-dark table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Peliculas o series</th>
+                            <th>Edad</th>
+                            <th>Peso</th>
+                            <th>Historia</th>
+                            <th>Imagen</th>
+                        </tr>
+                    </thead>
+                    
+                    <body>
+                        <tr th:each="Personaje : ${personajesPorEdad}">
+                            <td th:text="${Personaje.nombre}"></td>
+                            <td ><p th:each="peli :${Personaje.peliculasOSeries}" th:text="${peli.titulo}"></p></td>
+                            <td th:text="${Personaje.edad}"></td>
+                            <td th:text="${Personaje.peso}"></td>
+                            <td th:text="${Personaje.historia}"></td>
+                            <td><img th:src="@{/Imagen/load/__${Personaje.Imagen.id}__}" style="width: auto; height: 60px;">
+                            </td>
+                        </tr>
+                    </body>
+                </table> 
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

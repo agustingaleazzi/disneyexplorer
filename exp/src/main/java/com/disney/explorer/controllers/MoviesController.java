@@ -14,7 +14,7 @@ import com.disney.explorer.entities.PeliculaOSerie;
 import com.disney.explorer.services.PeliculaOSerieService;
 
 @Controller
-@RequestMapping("/moviesPanel")
+@RequestMapping("/movies")
 public class MoviesController {
 
 	@Autowired
@@ -22,9 +22,10 @@ public class MoviesController {
 	
 	@PreAuthorize("hasAnyRole('ROLE_REGISTERED_USER')")
 	@GetMapping("")
-	public String charactersPanel(@RequestParam(required=false) String error, ModelMap model) {
-		List<PeliculaOSerie> listaPeliculas = peliculaService.buscarTodos();
+	public String movies(@RequestParam(required=false) String error, ModelMap model) {
+		List<PeliculaOSerie> listaPeliculas = peliculaService.findAll();
 		model.addAttribute("listaPeliculas", listaPeliculas);
-		return "moviesPanel.html";
+		return "movies.html";
 	}
+	
 }
